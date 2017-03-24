@@ -1,0 +1,10 @@
+{
+    "dependencies": {
+        "github.com/grpc/grpc-go": {
+            "version": "^1.2.0"
+        },
+        "github.com/pkg/errors": {
+            "version": ">=0.8.0, <1.0.0"
+        }
+    }
+}
