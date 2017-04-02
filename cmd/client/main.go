@@ -16,22 +16,18 @@ import (
 
 const (
 	hostfileDesc = "The hostfile is the path to a file that contains " +
-		"the list of hostnames that the servers are " +
-		"running on. It assumes that each host is running " +
-		"only one instance of the server. It should be " +
-		"in the format of a hostname per line. " +
-		"The line number indicates the identifier of the server, " +
-		"which starts at 0."
-	serverPortDesc = "The server_port identifies on which port each server " +
+		"the list of hostnames that the servers are running on. It should " +
+		"be in the format of a hostname per line. The line number indicates " +
+		"the identifier of the server, which starts at 0."
+	portDesc = "The port identifies on which port each server " +
 		"will be listening on for incoming TCP connections from " +
-		"clients. It can take any integer from 1024 to 65535, " +
-		"but must be different from paxos_port."
+		"clients. It can take any integer from 1024 to 65535."
 )
 
 var (
-	help       = flag.Bool("help", false, "")
-	hostfile   = flag.StringP("hostfile", "h", "hostfile", hostfileDesc)
-	serverPort = flag.IntP("server_port", "s", 2346, serverPortDesc)
+	help     = flag.Bool("help", false, "")
+	hostfile = flag.StringP("hostfile", "h", "hostfile", hostfileDesc)
+	port     = flag.IntP("port", "p", 2346, portDesc)
 )
 
 func main() {
@@ -48,7 +44,7 @@ func main() {
 		log.Fatal("hostfile flag required")
 	}
 
-	addrs, err := util.ParseHostfile(*hostfile, *serverPort)
+	addrs, err := util.ParseHostfile(*hostfile, *port)
 	if err != nil {
 		log.Fatal(err)
 	}

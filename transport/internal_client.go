@@ -11,7 +11,7 @@ import (
 var clientOpts = []grpc.DialOption{
 	grpc.WithInsecure(),
 	grpc.WithBlock(),
-	grpc.WithTimeout(3 * time.Second),
+	grpc.WithTimeout(15 * time.Second),
 }
 
 // PaxosClient is a client stub implementing the PaxosTransportClient

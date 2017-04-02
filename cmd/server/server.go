@@ -87,15 +87,13 @@ func (s *server) Run() error {
 				s.registerClientUpdate(upReq)
 				s.node.Propose(ctx, *upReq.Update)
 			case rd := <-s.node.Ready():
-				// saveToStorage(rd.State, rd.Entries, rd.Snapshot)
+				// saveToStorage(rd.PersistentState)
 
 				if err := s.sendAll(ctx, rd.Messages); err != nil {
 					s.logger.Warning(err)
 				}
 
 				s.handleOrderedUpdates(rd.OrderedUpdates)
-
-				// n.Advance()
 			case <-ctx.Done():
 				return
 			}

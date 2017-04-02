@@ -14,16 +14,12 @@ import (
 
 const (
 	hostfileDesc = "The hostfile is the path to a file that contains " +
-		"the list of hostnames that the servers are " +
-		"running on. It assumes that each host is running " +
-		"only one instance of the server. It should be " +
-		"in the format of a hostname per line. " +
-		"The line number indicates the identifier of the server, " +
-		"which starts at 0."
-	serverPortDesc = "The server_port identifies on which port each server " +
+		"the list of hostnames that the servers are running on. It should " +
+		"be in the format of a hostname per line. The line number indicates " +
+		"the identifier of the server, which starts at 0."
+	portDesc = "The port identifies on which port each server " +
 		"will be listening on for incoming TCP connections from " +
-		"clients. It can take any integer from 1024 to 65535, " +
-		"but must be different from paxos_port."
+		"clients. It can take any integer from 1024 to 65535."
 	idDesc = "The optional id specifier of this process. Only needed if multiple " +
 		"processes in the hostfile are running on the same host, otherwise it can " +
 		"be deduced from the hostfile. 0-indexed."
@@ -31,11 +27,11 @@ const (
 )
 
 var (
-	help       = flag.Bool("help", false, "")
-	verbose    = flag.BoolP("verbose", "v", false, verboseDesc)
-	hostfile   = flag.StringP("hostfile", "h", "hostfile", hostfileDesc)
-	serverPort = flag.IntP("server_port", "s", 2346, serverPortDesc)
-	hostID     = flag.IntP("id", "i", -1, idDesc)
+	help     = flag.Bool("help", false, "")
+	verbose  = flag.BoolP("verbose", "v", false, verboseDesc)
+	hostfile = flag.StringP("hostfile", "h", "hostfile", hostfileDesc)
+	port     = flag.IntP("port", "p", 2346, portDesc)
+	hostID   = flag.IntP("id", "i", -1, idDesc)
 )
 
 func main() {
@@ -51,10 +47,12 @@ func main() {
 	if err != nil {
 		log.Fatal(err)
 	}
+
 	s, err := newServer(ph)
 	if err != nil {
 		log.Fatal(err)
 	}
+
 	s.Run()
 }
 
@@ -64,7 +62,7 @@ func parseHostfile() (parsedHostfile, error) {
 		return ph, errors.New("hostfile flag required")
 	}
 
-	addrs, err := util.ParseHostfile(*hostfile, *serverPort)
+	addrs, err := util.ParseHostfile(*hostfile, *port)
 	if err != nil {
 		return ph, err
 	}
@@ -100,6 +98,9 @@ func parseHostfile() (parsedHostfile, error) {
 	return ph, nil
 }
 
+// parsedHostfile represents a hostfile that has been analyzed to determine
+// the network settings for the local process's server and the address of
+// all remove servers.
 type parsedHostfile struct {
 	myID      int
 	myPort    int
