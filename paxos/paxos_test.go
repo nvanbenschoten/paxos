@@ -226,17 +226,15 @@ func TestLeaderElectionOrderedFailures(t *testing.T) {
 	n.crash(2)
 	n.crash(3)
 
-	// Instrument the progress timer callback so that we can make sure the
+	// Instrument the progress timer so that we can make sure the
 	// first three elections time out.
 	electionTimeouts := make([]bool, 7)
 	p0 := n.peers[0]
-	oldCallback := p0.progressTimer.onTimeout
-	p0.progressTimer.onTimeout = func() {
+	p0.progressTimer.instrumentTimeout(func() {
 		if p0.state == StateLeaderElection {
 			electionTimeouts[p0.lastAttempted] = true
 		}
-		oldCallback()
-	}
+	})
 
 	if !n.waitInstallView(4, maxTicksPerElection) {
 		t.Fatalf("leader election failed, view 4 never installed")

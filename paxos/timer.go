@@ -48,3 +48,11 @@ func (t *tickingTimer) stop() {
 func (t *tickingTimer) isSet() bool {
 	return !t.paused
 }
+
+func (t *tickingTimer) instrumentTimeout(instrumentedTimeout func()) {
+	old := t.onTimeout
+	t.onTimeout = func() {
+		instrumentedTimeout()
+		old()
+	}
+}

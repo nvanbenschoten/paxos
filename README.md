@@ -195,6 +195,13 @@ tests. Here, we can choose to interfere with network traffic, isolate paxos
 nodes, or crash paxos instances completely. All of this is deterministic and
 easy to test.
 
+These network tests include a number of interesting cases, such as failures
+during leader election. They verify that as long as fewer than a majority of
+nodes go down during the leader election, then the election still succeeds.
+However, if a majority of nodes crash, then the election blocks and never
+finishes. They also instrument the paxos timers themselves to make sure they
+are behaving as expected.
+
 ### Multiple Processes on the Same Host
 
 Another implementation issue faced while developing the sample applications was
