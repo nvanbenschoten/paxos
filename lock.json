@@ -1,5 +1,5 @@
 {
-    "memo": "c111d5e9ae6ebf06b211bd8857cc18790960393ee5c2badf71fbd3ba220235c4",
+    "memo": "4c8f1462392fb39f68e4d084b9cf98550c87f33288aa02cbb498f20f934447c4",
     "projects": [
         {
             "name": "github.com/golang/protobuf",
@@ -7,6 +7,87 @@
             "revision": "c9c7427a2a70d2eb3bafa0ab2dc163e45f143317",
             "packages": [
                 "proto"
+            ]
+        },
+        {
+            "name": "github.com/google/btree",
+            "branch": "master",
+            "revision": "316fb6d3f031ae8f4d457c6c5186b9e3ded70435",
+            "packages": [
+                "."
+            ]
+        },
+        {
+            "name": "github.com/petar/GoLLRB",
+            "branch": "master",
+            "revision": "53be0d36a84c2a886ca057d34b6aa4468df9ccb4",
+            "packages": [
+                "llrb"
+            ]
+        },
+        {
+            "name": "github.com/pkg/errors",
+            "version": "v0.8.0",
+            "revision": "645ef00459ed84a119197bfb8d8205042c6df63d",
+            "packages": [
+                "."
+            ]
+        },
+        {
+            "name": "github.com/spf13/pflag",
+            "branch": "master",
+            "revision": "d16db1e50e33dff1b6cdf37596cef36742128670",
+            "packages": [
+                "."
+            ]
+        },
+        {
+            "name": "golang.org/x/net",
+            "branch": "master",
+            "revision": "ffcf1bedda3b04ebb15a168a59800a73d6dc0f4d",
+            "packages": [
+                "context",
+                "http2",
+                "http2/hpack",
+                "idna",
+                "internal/timeseries",
+                "lex/httplex",
+                "trace"
+            ]
+        },
+        {
+            "name": "golang.org/x/text",
+            "branch": "master",
+            "revision": "f4b4367115ec2de254587813edaa901bc1c723a8",
+            "packages": [
+                "internal/gen",
+                "internal/triegen",
+                "internal/ucd",
+                "secure/bidirule",
+                "transform",
+                "unicode/bidi",
+                "unicode/cldr",
+                "unicode/norm",
+                "unicode/rangetable"
+            ]
+        },
+        {
+            "name": "google.golang.org/grpc",
+            "version": "v1.2.0",
+            "revision": "cdee119ee21e61eef7093a41ba148fa83585e143",
+            "packages": [
+                ".",
+                "codes",
+                "credentials",
+                "grpclog",
+                "internal",
+                "keepalive",
+                "metadata",
+                "naming",
+                "peer",
+                "stats",
+                "tap",
+                "transport"
             ]
         }
     ]
