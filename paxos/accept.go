@@ -70,7 +70,13 @@ func (p *paxos) globallyOrderedReady(gu *globalUpdate) bool {
 func (p *paxos) advanceARU() {
 	key := globalUpdateKey(p.localAru + 1)
 	p.globalHistory.AscendGreaterOrEqual(key, func(i btree.Item) bool {
-		gou := i.(*globalUpdate).globallyOrderedUpdate
+		gu := i.(*globalUpdate)
+		if gu.seqNum != p.localAru+1 {
+			// This is a gap in the global sequence, which we will not handle
+			// correctly until a reconciliation phase is added.
+			return false
+		}
+		gou := gu.globallyOrderedUpdate
 		if gou != nil {
 			p.localAru++
 			p.deliverOrderedUpdate(*gou)
