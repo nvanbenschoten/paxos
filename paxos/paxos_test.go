@@ -4,6 +4,8 @@ import (
 	"math/rand"
 	"testing"
 
+	"reflect"
+
 	pb "github.com/nvanbenschoten/paxos/paxos/paxospb"
 )
 
@@ -121,8 +123,10 @@ func (n *network) deliverAllMessages() {
 			for _, msg := range newMsgs {
 				msgConn := conn{from: p.id, to: msg.To}
 				perc := n.dropm[msgConn]
-				if n := rand.Float64(); n < perc {
-					continue
+				if perc > 0 {
+					if n := rand.Float64(); n < perc {
+						continue
+					}
 				}
 				msgs = append(msgs, msg)
 			}
@@ -159,7 +163,7 @@ func (n *network) waitInstallView(view uint64, maxTicks int) bool {
 	return false
 }
 
-const maxTicksPerElection = 1000
+const maxTicksPerElection = 5000
 
 func TestLeaderElectionNoFailures(t *testing.T) {
 	n := newNetwork(5)
@@ -216,10 +220,38 @@ func TestLeaderElectionThreeFailure(t *testing.T) {
 	}
 }
 
+func TestLeaderElectionOrderedFailures(t *testing.T) {
+	n := newNetwork(7)
+	n.crash(1)
+	n.crash(2)
+	n.crash(3)
+
+	// Instrument the progress timer callback so that we can make sure the
+	// first three elections time out.
+	electionTimeouts := make([]bool, 7)
+	p0 := n.peers[0]
+	oldCallback := p0.progressTimer.onTimeout
+	p0.progressTimer.onTimeout = func() {
+		if p0.state == StateLeaderElection {
+			electionTimeouts[p0.lastAttempted] = true
+		}
+		oldCallback()
+	}
+
+	if !n.waitInstallView(4, maxTicksPerElection) {
+		t.Fatalf("leader election failed, view 4 never installed")
+	}
+
+	expTimeouts := []bool{false, true, true, true, false, false, false}
+	if !reflect.DeepEqual(electionTimeouts, expTimeouts) {
+		t.Fatalf("expected election timeouts %v, found timeouts %v", expTimeouts, electionTimeouts)
+	}
+}
+
 func TestLeaderElectionSomeDroppedMessages(t *testing.T) {
 	n := newNetwork(5)
 
-	const dropPerc = 0.25
+	const dropPerc = 0.10
 	n.dropForAll(dropPerc)
 
 	const observeElectionCount = 5
