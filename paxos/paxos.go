@@ -160,7 +160,7 @@ type paxos struct {
 
 	// Utility Variables:
 	//
-	// logger ...
+	// logger is used by paxos to log event.
 	logger Logger
 	// rand holds the paxos instance's local Rand object. This allows us to avoid
 	// using the synchronized global Rand object.
@@ -198,7 +198,8 @@ func (p *paxos) initTimers() {
 	})
 	p.progressTimer.stop()
 
-	// The updateTimer ...
+	// The updateTimer is used to resend client updates when they have not made
+	// progress after a period of time.
 	const updateTimerTimeout = 300
 	p.updateTimer = makeTickingTimer(updateTimerTimeout, func() {
 		// TODO
