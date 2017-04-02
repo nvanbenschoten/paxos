@@ -36,6 +36,9 @@ type Config struct {
 	// Logger is the logger that the Paxos state machine will use
 	// to log events. If not set, a default logger will be used.
 	Logger Logger
+	// RandSeed allows the seed used by paxos's rand.Source to be
+	// injected, to allow for fully deterministic execution.
+	RandSeed int64
 }
 
 func (c *Config) validate() error {
@@ -44,6 +47,9 @@ func (c *Config) validate() error {
 	}
 	if c.Logger == nil {
 		c.Logger = NewDefaultLogger()
+	}
+	if c.RandSeed == 0 {
+		c.RandSeed = time.Now().UnixNano()
 	}
 	return nil
 }
@@ -177,7 +183,7 @@ func newPaxos(c *Config) *paxos {
 		logger:         c.Logger,
 		state:          StateLeaderElection,
 		globalHistory:  btree.New(32 /* degree */),
-		rand:           rand.New(rand.NewSource(time.Now().UnixNano())),
+		rand:           rand.New(rand.NewSource(c.RandSeed)),
 		lastExecuted:   make(map[uint64]uint64),
 		lastEnqueued:   make(map[uint64]uint64),
 		pendingUpdates: make(map[uint64]*pb.ClientUpdate),
