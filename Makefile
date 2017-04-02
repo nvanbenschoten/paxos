@@ -2,15 +2,22 @@ GO     ?= go
 DEP    ?= dep
 PROTOC ?= protoc
 
-TARGET := paxos
+TARGETS := server client
+PKGS := $(shell go list ./... | grep -v /vendor)
 
 .PHONY: build
 build:
-	@$(GO) build
+	@for target in $(TARGETS) ; do \
+		$(GO) build ./cmd/$$target ; \
+	done
 
 .PHONY: clean
 clean:
-	@$(RM) $(TARGET)
+	@$(RM) $(TARGETS)
+
+.PHONY: test
+test:
+	@$(GO) test -v ./paxos
 
 .PHONY: deps
 deps:
@@ -18,4 +25,9 @@ deps:
 
 .PHONY: proto
 proto:
-	@$(PROTOC) --go_out=plugins=grpc:. **/*.proto
+	@$(PROTOC) --go_out=plugins=grpc:. -I=.:../../../ paxos/**/*.proto
+	@$(PROTOC) --go_out=plugins=grpc:. -I=.:../../../ transport/**/*.proto
+
+.PHONY: check
+check:
+	@$(GO) vet $(PKGS)
