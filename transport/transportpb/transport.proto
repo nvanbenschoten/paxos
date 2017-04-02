@@ -1,0 +1,20 @@
+syntax = "proto3";
+package transportpb;
+
+import "github.com/nvanbenschoten/paxos/paxos/paxospb/paxos.proto";
+
+// Empty is an empty message. It is identical to google.protobuf.Empty, but
+// permits future modifications because it is custom.
+message Empty {}
+
+// PaxosTransport is an internal service between Paxos nodes that supports
+// streaming of Paxos messages.
+service PaxosTransport {
+    rpc DeliverMessage(stream paxospb.Message) returns (Empty) {}
+}
+
+// ClientService is an external service that receives a ClientUpdate and passes
+// it through Paxos to provide a global ordering.
+service ClientService {
+    rpc ClientUpdate(paxospb.ClientUpdate) returns (paxospb.GloballyOrderedUpdate) {}
+}
