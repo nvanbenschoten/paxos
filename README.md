@@ -4,13 +4,13 @@ _An implementation of the Paxos Consensus Protocol_
 
 Paxos is a protocol for solving consensus through state machine replication in
 an asynchronous environment with unreliable processes. This consensus protocol
-is then extended to a replication protocol commonly referred to as Multi-Paxos
-to assign global, persistent, total order to a sequence of client updates. The
-protocol works by having multiple replicas work in parallel to maintain the same
-state. This state is updated on each request from a client by each replica,
-allowing it to be automatically replicated and preserved even in the case of
-failures. The basic algorithm was famously described by Leslie Lamport in his
-1998 paper, [The Part-Time
+is then extended with a stable leader optimization to a replication protocol
+(commonly referred to as Multi-Paxos) to assign global, persistent, total order to
+a sequence of client updates. The protocol works by having multiple replicas
+work in parallel to maintain the same state. This state is updated on each
+request from a client by each replica, allowing it to be automatically
+replicated and preserved even in the case of failures. The basic algorithm was
+famously described by Leslie Lamport in his 1998 paper, [The Part-Time
 Parliament](https://www.microsoft.com/en-us/research/publication/part-time-parliament/).
 It was later clarified in his follow-up paper from 2001, [Paxos Made
 Simple](https://www.microsoft.com/en-us/research/publication/paxos-made-simple/?from=https%3A%2F%2Fresearch.microsoft.com%2Fen-us%2Fum%2Fpeople%2Flamport%2Fpubs%2Fpaxos-simple.pdf).
