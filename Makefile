@@ -17,7 +17,7 @@ clean:
 
 .PHONY: test
 test:
-	@$(GO) test -v ./paxos
+	@$(GO) test -v $(PKGS)
 
 .PHONY: deps
 deps:

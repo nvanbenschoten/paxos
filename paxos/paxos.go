@@ -237,6 +237,8 @@ func (p *paxos) initTimers() {
 func (p *paxos) Tick() {
 	p.progressTimer.tick()
 	p.updateTimer.tick()
+	p.viewChangeProofTimer.tick()
+	p.viewChangeRetransTimer.tick()
 }
 
 func (p *paxos) Step(m pb.Message) {

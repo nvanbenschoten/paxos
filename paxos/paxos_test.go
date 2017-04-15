@@ -60,7 +60,11 @@ type network struct {
 func newNetwork(nodeCount uint64) network {
 	peers := make(map[uint64]*paxos, nodeCount)
 	for i := uint64(0); i < nodeCount; i++ {
-		peers[i] = newPaxos(&Config{ID: i, NodeCount: nodeCount})
+		peers[i] = newPaxos(&Config{
+			ID:        i,
+			NodeCount: nodeCount,
+			RandSeed:  int64(i),
+		})
 	}
 	return network{
 		peers:    peers,
@@ -163,7 +167,7 @@ func (n *network) waitInstallView(view uint64, maxTicks int) bool {
 	return false
 }
 
-const maxTicksPerElection = 5000
+const maxTicksPerElection = 2000
 
 func TestLeaderElectionNoFailures(t *testing.T) {
 	n := newNetwork(5)
@@ -249,7 +253,7 @@ func TestLeaderElectionOrderedFailures(t *testing.T) {
 func TestLeaderElectionSomeDroppedMessages(t *testing.T) {
 	n := newNetwork(5)
 
-	const dropPerc = 0.10
+	const dropPerc = 0.50
 	n.dropForAll(dropPerc)
 
 	const observeElectionCount = 5
